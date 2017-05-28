@@ -149,7 +149,9 @@ apt-get install liferea \
                 sqlitebrowser \
                 xfce4-terminal \
                 file-roller \
-                wicd-gtk
+                wicd-gtk \
+                viewnior \
+                gedit
 
 # LIBREOFFICE
 f "Install Libreoffice?" &&
