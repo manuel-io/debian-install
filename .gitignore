@@ -1,0 +1,16 @@
+.build
+*.deb
+/auto
+/cache
+/chroot
+/local
+/config/binary
+/config/bootstrap
+/config/build
+/config/chroot
+/config/common
+/config/source
+/config/hooks/0*
+/chroot.packages.*
+/chroot.files
+/live-image-amd64.*
