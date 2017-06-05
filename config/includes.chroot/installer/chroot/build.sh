@@ -15,9 +15,8 @@ f() {
 
 # SYSTEM SETUP
 f "System setup?" && {
-grub-install $device
 
-tar -pPxvf /installer/system.tar
+grub-install $device
 
 apt-key adv --keyserver pgp.mit.edu --recv-keys 06c4ae2a
 apt-key adv --keyserver pgp.mit.edu --recv-keys 7fac5991
@@ -25,27 +24,10 @@ apt-key adv --keyserver pgp.mit.edu --recv-keys 7fac5991
 echo "${hostname}" > /etc/hostname
 /bin/hostname "${hostname}"
 
-cat >/etc/fstab <<EOF
-UUID=$(blkid "${device}1" | cut -d\" -sf 4) /boot ext2  defaults             0 2
-tmpfs                    /tmp                   tmpfs noatime,nodev,nosuid 0 0
-tmpfs                    /home/workspace        tmpfs noatime,nodev,nosuid 0 0
-/dev/mapper/linux-root   /                      ext4  errors=remount-ro    0 1
-/dev/mapper/linux-home   /home                  ext4  defaults             0 2
-/dev/mapper/linux-swap   none                   swap  sw                   0 0
-/dev/mapper/users-$user /home/$user           ext4  defaults             0 2
-EOF
-
-cat > /etc/crypttab <<EOF
-linux UUID=$(blkid "${device}2" | cut -d\" -sf 2) none luks
-users UUID=$(blkid "${device}3" | cut -d\" -sf 2) none luks
-EOF
-
 passwd <<EOF
 root
 root
 EOF
-
-/usr/sbin/locale-gen
 
 apt-get update
 apt-get install coreutils \
@@ -65,6 +47,35 @@ apt-get install coreutils \
                 wicd-curses \
                 kbd \
                 firmware*
+
+systemctl enable lvm2
+systemctl enable wicd
+
+update-initramfs -u -k all
+update-grub
+}
+
+# SYSTEM CONFIG
+f "System config?" && {
+
+tar -pPxvf /installer/system.tar
+
+cat >/etc/fstab <<EOF
+UUID=$(blkid "${device}1" | cut -d\" -sf 4) /boot ext2  defaults             0 2
+tmpfs                    /tmp                   tmpfs noatime,nodev,nosuid 0 0
+tmpfs                    /home/workspace        tmpfs noatime,nodev,nosuid 0 0
+/dev/mapper/linux-root   /                      ext4  errors=remount-ro    0 1
+/dev/mapper/linux-home   /home                  ext4  defaults             0 2
+/dev/mapper/linux-swap   none                   swap  sw                   0 0
+/dev/mapper/users-$user /home/$user           ext4  defaults             0 2
+EOF
+
+cat > /etc/crypttab <<EOF
+linux UUID=$(blkid "${device}2" | cut -d\" -sf 2) none luks
+users UUID=$(blkid "${device}3" | cut -d\" -sf 2) none luks
+EOF
+
+/usr/sbin/locale-gen
 
 systemctl enable lvm2
 systemctl enable wicd
