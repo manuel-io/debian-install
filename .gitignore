@@ -1,4 +1,10 @@
+Release
+Release.gpg
+InRelease
+Packages
+Packages.gz
 .build
+*.img
 *.deb
 /auto
 /cache
@@ -11,6 +17,8 @@
 /config/common
 /config/source
 /config/hooks/0*
+/config/hooks/live/0*
+/config/hooks/normal/0*
 /chroot.packages.*
 /chroot.files
 /live-image-amd64.*

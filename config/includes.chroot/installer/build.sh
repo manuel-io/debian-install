@@ -65,9 +65,10 @@
 [ $1 -eq "4" ] && {
   echo "Stage 4 - system preparation"
 
-  debootstrap --components main,contrib,non-free \
-    --include linux-image-amd64,grub-pc,locales,cryptsetup,lvm2,zsh \
-    --arch amd64 stable /mnt http://ftp.de.debian.org/debian/
+  debootstrap --keyring /installer/chroot/manuel-io.gpg \
+    --components main,contrib,non-free \
+    --include linux-image-amd64,grub-pc,locales,cryptsetup,lvm2,zsh,vim \
+    --arch amd64 stable /mnt file:/packages/amd64
 }
 
 [ $1 -eq "5" ] && {
@@ -86,5 +87,6 @@
   echo "Stage 6 - installing packages"
 
   cp -rv /installer/chroot/* /mnt/installer/
+  cp -rv /packages/* /mnt/packages/
   chroot /mnt /bin/bash
 }

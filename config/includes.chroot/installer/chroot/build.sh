@@ -18,8 +18,9 @@ f "System setup?" && {
 
 grub-install $device
 
-apt-key adv --keyserver pgp.mit.edu --recv-keys 06c4ae2a
+apt-key adv --keyserver pgp.mit.edu --recv-keys 076AAEDF
 apt-key adv --keyserver pgp.mit.edu --recv-keys 7fac5991
+apt-key adv --keyserver pgp.mit.edu --recv-keys 0F1B0520
 
 echo "${hostname}" > /etc/hostname
 /bin/hostname "${hostname}"
@@ -198,7 +199,15 @@ apt-get install libsdl2-dev \
                 libcurl4-openssl-dev \
                 libcrypto++-dev \
                 libjansson-dev \
+                libzip4 \
                 libzip-dev
+
+# DATABASE TOOLS
+f "Install Database Tools?" &&
+apt-get install sqlite3 \
+                libsqlite3-dev \
+                postgresql-client
+
 # MEDICAL APPS
 f "Install Medical Apps?" &&
 apt-get install aeskulap
@@ -351,7 +360,8 @@ dpkg -i /installer/debs/*
 f "Install Extra Packages?" && {
   apt-get update
   apt-get install firefox \
-                  google-chrome-stable
+                  google-chrome-stable \
+                  heroku
 }
 
 # GRAPHICAL ENVIORNMENT

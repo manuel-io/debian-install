@@ -62,7 +62,7 @@ grub-pc
 kbd
 EOF
 
-[[ $@ =~ [3] ]] &&
+[[ $@ =~ [4] ]] &&
 cat > config/package-lists/terminal.list.chroot <<EOF
 vim
 zsh
