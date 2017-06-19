@@ -1,4 +1,5 @@
 ## A personalized Linux operating system
+![debian stretch](/share/stretch.png)
 
 ### Build the Live-System
 
