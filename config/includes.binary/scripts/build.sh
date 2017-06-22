@@ -1,5 +1,8 @@
 #!/bin/bash
 
+free="config/includes.chroot/installer/chroot/free.img"
+dd if=/dev/urandom of=$free count=1 bs=4096
+
 [[ $@ =~ [1] ]] &&
 lb config noauto \
   --apt apt \
@@ -62,7 +65,7 @@ grub-pc
 kbd
 EOF
 
-[[ $@ =~ [4] ]] &&
+[[ $@ =~ [3] ]] &&
 cat > config/package-lists/terminal.list.chroot <<EOF
 vim
 zsh
@@ -72,3 +75,6 @@ curl
 less
 links
 EOF
+
+find config -type d -exec chmod a+rx {} \;
+find config -type f -exec chmod a+r {} \;

@@ -18,10 +18,6 @@ f "System setup?" && {
 
 grub-install $device
 
-apt-key adv --keyserver pgp.mit.edu --recv-keys 076AAEDF
-apt-key adv --keyserver pgp.mit.edu --recv-keys 7fac5991
-apt-key adv --keyserver pgp.mit.edu --recv-keys 0F1B0520
-
 echo "${hostname}" > /etc/hostname
 /bin/hostname "${hostname}"
 
@@ -137,7 +133,8 @@ apt-get install rdiff-backup \
                 p7zip-full \
                 p7zip-rar \
                 unrar \
-                jmtpfs
+                jmtpfs \
+                gnome-keyring-query
 
 # XMONAD DESKTOP
 f "Install Xmonad?" &&
@@ -163,7 +160,10 @@ apt-get install liferea \
                 file-roller \
                 wicd-gtk \
                 viewnior \
-                gedit
+                gedit \
+                pavucontrol \
+                keepassx \
+                keepassxc
 
 # LIBREOFFICE
 f "Install Libreoffice?" &&
@@ -181,7 +181,8 @@ apt-get install libreoffice-common \
 # PRINTING TOOLS
 f "Install Printing Tools?" &&
 apt-get install cups \
-                system-config-printer
+                system-config-printer \
+                ipsiosg
 
 # SCANNING TOOLS
 f "Install Scanning Tools?" &&
@@ -192,15 +193,8 @@ apt-get install sane \
 
 # GAMING TOOLS
 f "Install Gaming Tools?" &&
-apt-get install libsdl2-dev \
-                libsdl2-ttf-dev \
-                libspeex-dev \
-                libspeexdsp-dev \
-                libcurl4-openssl-dev \
-                libcrypto++-dev \
-                libjansson-dev \
-                libzip4 \
-                libzip-dev
+apt-get install openrct2 \
+                rct2-original
 
 # DATABASE TOOLS
 f "Install Database Tools?" &&
@@ -249,9 +243,13 @@ apt-get install gimp \
 
 # FONTS
 f "Install Fonts?" &&
-apt-get install ttf-dejavu \
+apt-get install lmodern \
+                fonts-liberation \
+                ttf-dejavu \
                 fonts-thai-tlwg \
                 fonts-tomsontalks \
+                fonts-yanone-kaffeesatz \
+                fonts-jura \
                 ttf-mscorefonts-installer
 
 # HASKELL 
@@ -343,7 +341,7 @@ apt-get install zlib1g-dev \
                 libkrb5-dev \
                 libpq-dev
 
-DEBIAN TOOLS
+# DEBIAN TOOLS
 f "Install Debian Tools?" &&
   apt-get install build-essential \
                   debhelper \
@@ -352,14 +350,10 @@ f "Install Debian Tools?" &&
                   fakeroot \
                   lintian 
 
-# DEB FILES
-f "Install DEB Files?" &&
-dpkg -i /installer/debs/*
-
 # EXTRA PACKAGES
 f "Install Extra Packages?" && {
   apt-get update
-  apt-get install firefox \
+  apt-get install firefox-esr \
                   google-chrome-stable \
                   heroku
 }

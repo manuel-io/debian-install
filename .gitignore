@@ -3,6 +3,7 @@ Release.gpg
 InRelease
 Packages
 Packages.gz
+Contents*
 .build
 *.img
 *.deb
@@ -19,6 +20,7 @@ Packages.gz
 /config/hooks/0*
 /config/hooks/live/0*
 /config/hooks/normal/0*
+/config/package-lists
 /chroot.packages.*
 /chroot.files
 /live-image-amd64.*
