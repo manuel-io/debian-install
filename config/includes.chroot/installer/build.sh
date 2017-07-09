@@ -81,10 +81,12 @@ rm -f /installer/chroot/free.img
   lvchange -ay linux
   lvchange -ay users
 
-  mkfs.ext2 -b 4096 -L boot "${device}1"
-  mkswap -L swap /dev/mapper/linux-swap
-  mkfs.ext4 -b 4096 -L root /dev/mapper/linux-root
-  mkfs.ext4 -b 4096 -L home /dev/mapper/linux-home
+  $systempartition && {
+    mkfs.ext2 -b 4096 -L boot "${device}1"
+    mkswap -L swap /dev/mapper/linux-swap
+    mkfs.ext4 -b 4096 -L root /dev/mapper/linux-root
+    mkfs.ext4 -b 4096 -L home /dev/mapper/linux-home
+  }
 
   $userpartition && {
     mkfs.ext4 -b 4096 -L "${user}" "/dev/mapper/users-${user}"

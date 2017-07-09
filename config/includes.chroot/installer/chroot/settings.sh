@@ -5,6 +5,7 @@ uid=1100
 user=admin
 groups="users,netdev,arduino,sudo,usbasp"
 hostname=system
+systempartition=false
 userpartition=false
 format="-c aes-xts-plain64 -h sha512 -s 512"
 derived="/lib/cryptsetup/scripts/decrypt_derived"
@@ -30,6 +31,10 @@ modify_settings() {
   read -e -p "Groups (${groups}): " -i "${groups}" -r groups
   read -e -p "Hostname (${hostname}): " -i "${hostname}" -r hostname
   
+  read -p "Format system-partition? " -n 1 -r
+  [[ $REPLY =~ ^[Yy]$ ]] && systempartition=true
+  echo
+
   read -p "Format user-partition? " -n 1 -r
   [[ $REPLY =~ ^[Yy]$ ]] && userpartition=true
   echo
@@ -38,6 +43,8 @@ modify_settings() {
   echo "User (${uid}): ${user}"
   echo "Groups: ${groups}"
   echo "Hostname: ${hostname}"
+  $systempartition && echo "Format system-partition"
+  $systempartition || echo "Do not format system-partition"
   $userpartition && echo "Format user-partition"
   $userpartition || echo "Do not format user-partition"
   echo "----------------------------------------------"
