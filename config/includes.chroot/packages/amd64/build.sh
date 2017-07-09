@@ -52,16 +52,15 @@ done
   apt-ftparchive release dists/stable/non-free/binary-amd64 > dists/stable/non-free/binary-amd64/Release
   apt-ftparchive release -c meta/release.conf dists/stable > dists/stable/Release
 
-  gpg -a --yes --output dists/stable/Release.gpg --local-user 076AAEDF --detach-sign dists/stable/Release
-  gpg -a --yes --clearsign --output dists/stable/InRelease --local-user 076AAEDF --detach-sign dists/stable/Release
+  # Replace $(id -un) with your desired gpg signing key
 
-  find ../../packages -type d -exec chmod a+rx {} \;
-  find ../../packages -type f -exec chmod a+r {} \;
+  gpg -a --yes --output dists/stable/Release.gpg --local-user $(id -un) --detach-sign dists/stable/Release
+  gpg -a --yes --clearsign --output dists/stable/InRelease --local-user $(id -un) --detach-sign dists/stable/Release
 }
 
 [ $1 -eq 4 ] && {
   mkdir -p /packages/amd64
-  rsync -rva ../../packages/* /packages
+  rsync -rva * /packages/amd64
   find /packages -type d -exec chmod a+rx {} \;
   find /packages -type f -exec chmod a+r {} \;
 }

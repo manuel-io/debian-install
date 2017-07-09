@@ -45,9 +45,6 @@ apt-get install coreutils \
                 kbd \
                 firmware*
 
-systemctl enable lvm2
-systemctl enable wicd
-
 update-initramfs -u -k all
 update-grub
 }
@@ -297,6 +294,7 @@ apt-get install postfix \
 # DEVEL TOOLS
 f "Install Devel Tools?" &&
 apt-get install build-essential \
+                apt-utils \
                 apt-file \
                 make \
                 cmake \
@@ -343,12 +341,13 @@ apt-get install zlib1g-dev \
 
 # DEBIAN TOOLS
 f "Install Debian Tools?" &&
-  apt-get install build-essential \
-                  debhelper \
-                  dh-make \
-                  quilt \
-                  fakeroot \
-                  lintian 
+apt-get install build-essential \
+                dpkg-dev \
+                debhelper \
+                dh-make \
+                quilt \
+                fakeroot \
+                lintian
 
 # EXTRA PACKAGES
 f "Install Extra Packages?" && {
