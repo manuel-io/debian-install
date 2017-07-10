@@ -38,28 +38,6 @@ rm -f /installer/chroot/free.img
   lvcreate -l 100%FREE -n root linux
   lvcreate -l 100%FREE -n "${user}" users
 
-  lvchange -ay linux
-  lvchange -ay users
-
-  mkfs.ext2 -b 4096 -L boot "${device}1"
-  mkswap -L swap /dev/mapper/linux-swap
-  mkfs.ext4 -b 4096 -L root /dev/mapper/linux-root
-  mkfs.ext4 -b 4096 -L home /dev/mapper/linux-home
-
-  $userpartition && {
-    cryptsetup luksFormat $format "${device}3" <<< $password
-    cryptsetup luksOpen "${device}3" users <<< $password
-
-    cryptsetup luksAddKey "${device}3" /fskey <<< $password
-
-    pvcreate /dev/mapper/users
-    vgcreate users /dev/mapper/users
-    lvcreate -l 100%FREE -n "${user}" users
-    lvchange -ay users
-
-    mkfs.ext4 -b 4096 -L "${user}" "/dev/mapper/users-${user}"
-  }
-
   shred -u /fskey
   swapoff -a
 
@@ -93,7 +71,7 @@ rm -f /installer/chroot/free.img
   }
 
   mount /dev/mapper/linux-root /mnt
-  mkdir -p /mnt/boot /mnt/home /mnt/installer
+  mkdir -p /mnt/boot /mnt/home
 
   mount "${device}1" /mnt/boot
   mount /dev/mapper/linux-home /mnt/home
@@ -105,17 +83,10 @@ rm -f /installer/chroot/free.img
 [[ $cmd =~ [6] ]] && {
   echo "Stage 6 - system preparation"
 
-  debootstrap --keyring /packages/amd64/meta/manuel-io.gpg \
+  debootstrap --keyring /packages/amd64/meta/local.gpg \
     --components main,contrib,non-free \
     --include linux-image-amd64,grub-pc,busybox,locales,cryptsetup,lvm2,zsh,vim \
     --arch amd64 stable /mnt file:/packages/amd64
-
-  mkdir -p /mnt/packages/amd64
-  rsync -rva /packages/* /mnt/packages
-  cp -iva /packages/amd64/meta/manuel-io.gpg /mnt/etc/apt/trusted.gpg.d/manuel-io.gpg
-  cp -iva /packages/amd64/meta/local.list /mnt/etc/apt/sources.list.d/local.list
-  find /mnt/packages -type d -exec chmod a+rx {} \;
-  find /mnt/packages -type f -exec chmod a+r {} \;
 }
 
 [[ $cmd =~ [7] ]] && {
@@ -127,12 +98,26 @@ rm -f /installer/chroot/free.img
   mount -o rbind /run/lvm /mnt/run/lvm
   mount -o rbind /run/lock/lvm /mnt/run/lock/lvm
 
-  cp /etc/resolv.conf /mnt/etc/resolv.conf
+  cp -fva /etc/resolv.conf /mnt/etc/resolv.conf
 }
 
 [[ $cmd =~ [8] ]] && {
   echo "Stage 8 - installing packages"
 
-  cp -rv /installer/chroot/* /mnt/installer/
+  mkdir -p /mnt/packages/amd64
+  mkdir -p /mnt/installer
+
+  rsync -rva /packages/* /mnt/packages
+
+  cp -fva /packages/amd64/meta/local.gpg /mnt/etc/apt/trusted.gpg.d/local.gpg
+  cp -fva /packages/amd64/meta/local.list /mnt/etc/apt/sources.list.d/local.list
+
+  rsync -rva /installer/chroot/* /mnt/installer
+
+  find /mnt/packages -type d -exec chmod a+rx {} \;
+  find /mnt/packages -type f -exec chmod a+r {} \;
+  find /mnt/installer -type d -exec chmod a+rx {} \;
+  find /mnt/installer -type f -exec chmod a+r {} \;
+
   chroot /mnt /bin/bash
 }

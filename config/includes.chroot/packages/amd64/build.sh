@@ -30,26 +30,27 @@ done
 
 [ $1 -eq 3 ] && {
   apt-ftparchive --arch amd64 packages pool/main > dists/stable/main/binary-amd64/Packages
-  gzip -k dists/stable/main/binary-amd64/Packages
+  gzip -kf dists/stable/main/binary-amd64/Packages
 
   apt-ftparchive --arch amd64 packages pool/contrib > dists/stable/contrib/binary-amd64/Packages
-  gzip -k dists/stable/contrib/binary-amd64/Packages
+  gzip -kf dists/stable/contrib/binary-amd64/Packages
   
   apt-ftparchive --arch amd64 packages pool/non-free > dists/stable/non-free/binary-amd64/Packages
-  gzip -k dists/stable/non-free/binary-amd64/Packages
+  gzip -kf dists/stable/non-free/binary-amd64/Packages
 
   apt-ftparchive contents pool/main > dists/stable/main/Contents-amd64
-  gzip -k dists/stable/main/Contents-amd64
+  gzip -kf dists/stable/main/Contents-amd64
 
   apt-ftparchive contents pool/contrib > dists/stable/contrib/Contents-amd64
-  gzip -k dists/stable/contrib/Contents-amd64
+  gzip -kf dists/stable/contrib/Contents-amd64
 
   apt-ftparchive contents pool/non-free > dists/stable/non-free/Contents-amd64
-  gzip -k dists/stable/non-free/Contents-amd64
+  gzip -kf dists/stable/non-free/Contents-amd64
 
   apt-ftparchive release dists/stable/main/binary-amd64 > dists/stable/main/binary-amd64/Release
   apt-ftparchive release dists/stable/contrib/binary-amd64 > dists/stable/contrib/binary-amd64/Release
   apt-ftparchive release dists/stable/non-free/binary-amd64 > dists/stable/non-free/binary-amd64/Release
+
   apt-ftparchive release -c meta/release.conf dists/stable > dists/stable/Release
 
   # Replace $(id -un) with your desired gpg signing key
