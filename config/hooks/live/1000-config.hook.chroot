@@ -1,6 +1,5 @@
 #!/bin/sh
 
-systemctl enable lvm2
 systemctl enable wicd
 
 passwd <<EOF

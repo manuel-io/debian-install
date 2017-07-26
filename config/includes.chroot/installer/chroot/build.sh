@@ -4,7 +4,7 @@
 
 f() {
  echo $1
- read -p "Continue (y/n)?" choice
+ read -p "Continue (y/N)?" choice
   case "$choice" in 
     y|Y) return 0;;
     n|N) return 1;;
@@ -34,14 +34,7 @@ apt-get install -y coreutils \
                    dialog \
                    dbus \
                    debconf \
-                   net-tools \
-                   wpasupplicant \
-                   wireless-tools \
                    dnsutils \
-                   ifupdown \
-                   iptables \
-                   wicd \
-                   wicd-curses \
                    kbd \
                    firmware*
 
@@ -71,17 +64,12 @@ EOF
 
 /usr/sbin/locale-gen
 
-systemctl enable lvm2
-systemctl enable wicd
-
 update-initramfs -u -k all
 update-grub
 }
 
 # USER SETTINGS
 f "User Settings?" && {
-  groupadd usbasp
-  groupadd arduino
   groupadd -g "${uid}" "${user}"
   useradd -u "${uid}" -g "${uid}" -G "${user},${groups}" -d "/home/${user}" -s /usr/bin/zsh "${user}"
   chown -R $user:$user "/home/${user}"
@@ -97,8 +85,28 @@ f "Upgrade Sources?" && {
 
 # SYSTEM TOOLS
 f "Install System Tools?" &&
-apt-get install -y apt-file \
+apt-get install -y apt \
+                   apt-file \
                    keyboard-configuration
+
+# NETWORK TOOLS
+f "Install Network Tools?" && {
+  apt-get install -y dnsutils \
+                     net-tools \
+                     ifupdown \
+                     iproute2 \
+                     iptables \
+                     nftables \
+                     wvdial \
+                     wicd \
+                     wicd-curses \
+                     wpasupplicant \
+                     wireless-tools
+} && {
+  # settings
+  usermod -aG dialout,netdev $user
+  systemctl enable wicd
+}
 
 # SOUND SYSTEM
 f "Install Sound System?" &&
@@ -160,7 +168,8 @@ apt-get install -y liferea \
                    gedit \
                    pavucontrol \
                    keepassx \
-                   keepassxc
+                   keepassxc \
+                   easytag
 
 # LIBREOFFICE
 f "Install Libreoffice?" &&
@@ -176,10 +185,14 @@ apt-get install -y libreoffice-common \
                    hunspell-de-de
 
 # PRINTING TOOLS
-f "Install Printing Tools?" &&
-apt-get install -y cups \
-                   system-config-printer \
-                   ipsiosg
+f "Install Printing Tools?" && {
+  apt-get install -y cups \
+                     system-config-printer \
+                     ipsiosg
+} && {
+  # settings
+  usermod -aG lpadmin $user
+}
 
 # SCANNING TOOLS
 f "Install Scanning Tools?" &&
@@ -212,17 +225,24 @@ apt-get install -y aeskulap
 
 # MEDIA APPS
 f "Install Media Apps?" &&
-apt-get install -y vlc \
+apt-get install -y mpv \
+                   vlc \
                    mplayer \
-                   lsdvd \
-                   normalize-audio \
+                   mencoder \
                    vorbis-tools \
                    gpac \
-                   mkvtoolnix \
-                   mkvtoolnix-gui \
-                   libav-tools \
-                   libdvdread4 \
-                   libdvdnav4
+                   libav-tools
+
+# DVD SUPPORT
+f "Install DVD Support?" && {
+  apt-get install -y libdvd-pkg \
+                     libdvdread4 \
+                     libdvdnav4 \
+                     lsdvd
+} && {
+  # settings
+  dpkg-reconfigure libdvd-pkg
+}
 
 # MEDIA CODECS
 f "Install Media Codecs?" &&
@@ -282,24 +302,40 @@ apt-get install -y ruby \
                    ruby-dev
 
 # AVR
-f "Install AVR Tools?" &&
-apt-get install -y binutils-avr \
-                   gcc-avr \
-                   avr-libc \
-                   avrdude
+f "Install AVR Tools?" && {
+  apt-get install -y binutils-avr \
+                     gcc-avr \
+                     avr-libc \
+                     avrdude
+} && {
+  # settings
+  groupadd -g 501 usbasp
+  groupadd -g 502 arduino
+  usermod -aG usbasp,arduino $user
+}
+
 # ARM
 f "Install ARM Tools?" &&
 apt-get install -y gcc-arm-none-eabi
 
 # WEB SERVER
-f "Install Web Server Tools?" &&
-apt-get install -y nginx
+f "Install Web Server Tools?" && {
+  apt-get install -y nginx
+} && {
+  # settings
+  systemctl disable nginx
+}
 
 # MAIL SERVER
-f "Install Mail Server Tools?" &&
-apt-get install -y postfix \
-                   procmail \
-                   dovecot-imapd
+f "Install Mail Server Tools?" && {
+  apt-get install -y postfix \
+                     procmail \
+                     dovecot-imapd
+} && {
+  # settings
+  systemctl disable dovecot
+  systemctl disable postfix
+}
 
 # DEVEL TOOLS
 f "Install Devel Tools?" &&
@@ -352,6 +388,7 @@ apt-get install -y zlib1g-dev \
 # DEBIAN TOOLS
 f "Install Debian Tools?" &&
 apt-get install -y build-essential \
+                   devscripts \
                    dpkg-dev \
                    debhelper \
                    dh-make \
@@ -368,10 +405,7 @@ f "Install Extra Packages?" && {
 }
 
 # GRAPHICAL ENVIORNMENT
-f "Graphical environment?" &&
-systemctl set-default graphical.target
-
-systemctl disable dovecot
-systemctl disable nginx
-systemctl disable postfix
-
+f "Graphical environment?" && {
+  ln -s /usr/bin/slimlock /usr/local/bin/xflock4
+  systemctl set-default graphical.target
+}

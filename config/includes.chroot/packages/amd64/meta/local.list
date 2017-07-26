@@ -1,1 +1,2 @@
 deb file:/packages/amd64 stable main contrib non-free
+deb file:/packages/amd64 stable-updates main contrib non-free

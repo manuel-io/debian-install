@@ -3,7 +3,7 @@
 device=/dev/sda
 uid=1100
 user=admin
-groups="users,netdev,arduino,sudo,usbasp"
+groups="users,sudo"
 hostname=system
 systempartition=false
 userpartition=false

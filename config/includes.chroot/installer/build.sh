@@ -107,12 +107,12 @@ rm -f /installer/chroot/free.img
   mkdir -p /mnt/packages/amd64
   mkdir -p /mnt/installer
 
-  rsync -rva /packages/* /mnt/packages
+  rsync -rva --delete /packages/* /mnt/packages
 
   cp -fva /packages/amd64/meta/local.gpg /mnt/etc/apt/trusted.gpg.d/local.gpg
   cp -fva /packages/amd64/meta/local.list /mnt/etc/apt/sources.list.d/local.list
 
-  rsync -rva /installer/chroot/* /mnt/installer
+  rsync -rva --delete /installer/chroot/* /mnt/installer
 
   find /mnt/packages -type d -exec chmod a+rx {} \;
   find /mnt/packages -type f -exec chmod a+r {} \;
