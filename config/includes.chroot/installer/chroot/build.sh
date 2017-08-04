@@ -62,6 +62,32 @@ linux UUID=$(blkid "${device}2" | cut -d\" -sf 2) none luks
 users UUID=$(blkid "${device}3" | cut -d\" -sf 2) none luks
 EOF
 
+cat > "/home/${user}/build.sh" <<EOF
+#!/bin/bash
+
+mkdir -p /home/${user}/repos
+cd /home/${user}
+
+git clone git@github.com:manuel-io/dotfiles.git repos/dotfiles
+source /home/${user}/repos/dotfiles/bash/functions.sh
+copy_dotfiles
+
+git clone git@github.com:manuel-io/petridish.git repos/petridish
+ln -s /home/${user}/repos/petridish/bin /home/${user}/bin
+
+# Linuxbrew: The Homebrew package manager for Linux
+curl -sSL https://raw.githubusercontent.com/Linuxbrew/install/master/install | ruby
+
+# Ruby Version Manager
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+curl -sSL https://get.rvm.io | bash -s stable
+
+# Node Version Manager
+curl -O https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+EOF
+
+chmod u+rwx "/home/${user}/build.sh"
+
 /usr/sbin/locale-gen
 
 update-initramfs -u -k all
@@ -301,6 +327,10 @@ f "Install Ruby?" &&
 apt-get install -y ruby \
                    ruby-dev
 
+# ELIXIR
+f "Install Elixir?" &&
+apt-get install -y elixir
+
 # AVR
 f "Install AVR Tools?" && {
   apt-get install -y binutils-avr \
@@ -318,23 +348,51 @@ f "Install AVR Tools?" && {
 f "Install ARM Tools?" &&
 apt-get install -y gcc-arm-none-eabi
 
+# SERVER TOOLS
+f "Install Server Tools?" && {
+  apt-get install -y fail2ban \
+                     logwatch
+} && {
+  # settings
+  systemctl stop fail2ban
+  systemctl disable fail2ban
+}
+
+#  POSTGRESQL SERVER
+f "Install PostgreSQL Server?" && {
+  apt-get install -y postgresql
+} && {
+  # settings
+  systemctl stop postgresql
+  systemctl disable postgresql
+}
+
 # WEB SERVER
 f "Install Web Server Tools?" && {
   apt-get install -y nginx
 } && {
   # settings
+  systemctl stop nginx
   systemctl disable nginx
 }
 
-# MAIL SERVER
-f "Install Mail Server Tools?" && {
+# POSTFIX SERVER
+f "Install Postfix Server?" && {
   apt-get install -y postfix \
-                     procmail \
-                     dovecot-imapd
+                     procmail
 } && {
   # settings
-  systemctl disable dovecot
+  systemctl stop postfix
   systemctl disable postfix
+}
+
+# DOVECOT SERVER
+f "Install Dovecot Server?" && {
+  apt-get install -y dovecot-imapd
+} && {
+  # settings
+  systemctl stop dovecot
+  systemctl disable dovecot
 }
 
 # DEVEL TOOLS
