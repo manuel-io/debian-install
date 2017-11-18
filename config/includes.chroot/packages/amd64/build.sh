@@ -12,6 +12,7 @@ do
   version=$(basename ${file} | cut -d_ -sf2)
   version="${version//\+/\\+}"
   dpkg -l | egrep "${name}.*${version}.*(all|amd64)" > $null || {
+    echo "${name}(:amd64)?.*${version}.*(all|amd64)"
     rm -v $file
   }
 done
@@ -22,7 +23,7 @@ do
   for file in `apt-cache show $deb | grep Filename | cut -d\  -sf2`
   do
     dpkg-deb --info "${file}" &> /dev/null || {
-      echo $file
+      echo $deb
       apt-get download $deb
     }
   done
