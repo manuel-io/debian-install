@@ -7,23 +7,19 @@ cd $(cd "$(dirname "$0")"; pwd)
 [ $1 -eq 0 ] &&
 for file in `find pool -name '*.deb' -type f`
 do
-  name=$(basename ${file/_*/})
-  name="${name//\+/\\+}"
-  version=$(basename ${file} | cut -d_ -sf2)
-  version="${version//\+/\\+}"
-  dpkg -l | egrep "${name}.*${version}.*(all|amd64)" > $null || {
-    echo "${name}(:amd64)?.*${version}.*(all|amd64)"
-    rm -v $file
-  }
+  grep $file file.tmp &> /dev/null || rm -vf $file
 done
 
 [ $1 -eq 1 ] &&
+rm -f file.tmp &&
 for deb in `dpkg -l | cut -d\  -sf3`
 do
   for file in `apt-cache show $deb | grep Filename | cut -d\  -sf2`
   do
+    echo $file >> file.tmp
     dpkg-deb --info "${file}" &> /dev/null || {
       echo $deb
+      echo $file
       apt-get download $deb
     }
   done
@@ -105,5 +101,3 @@ debootstrap --keyring meta/manuel-io.gpg \
   --components main,contrib,non-free \
   --include linux-image-amd64,grub-pc,busybox,locales,cryptsetup,lvm2,zsh,vim \
   --arch amd64 stable /mnt file:/packages/amd64
-
-
