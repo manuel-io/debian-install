@@ -171,6 +171,7 @@ apt-get install -y rdiff-backup \
                    p7zip-rar \
                    unrar \
                    jmtpfs \
+                   cpulimit \
                    gnome-keyring-query
 
 # XMONAD DESKTOP
@@ -363,6 +364,11 @@ f "Install Server Tools?" && {
   systemctl stop fail2ban
   systemctl disable fail2ban
 }
+
+# VIRTUALIZATION TECHNOLOGIES
+f "Install ARM Tools?" &&
+apt-get install -y qemu-system-x86 \
+                   qemu-user-static
 
 #  POSTGRESQL SERVER
 f "Install PostgreSQL Server?" && {
