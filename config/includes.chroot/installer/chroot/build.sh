@@ -133,7 +133,8 @@ f "Install Network Tools?" && {
                      wicd-curses \
                      wpasupplicant \
                      wireless-tools \
-                     tcpdump
+                     tcpdump \
+                     telnet
 } && {
   # settings
   usermod -aG dialout,netdev $user
