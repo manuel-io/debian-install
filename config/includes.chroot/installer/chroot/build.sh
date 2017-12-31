@@ -118,7 +118,8 @@ f "Upgrade Sources?" && {
 f "Install System Tools?" &&
 apt-get install -y apt \
                    apt-file \
-                   keyboard-configuration
+                   keyboard-configuration \
+                   cpufrequtils
 
 # NETWORK TOOLS
 f "Install Network Tools?" && {
@@ -203,7 +204,8 @@ apt-get install -y liferea \
                    pavucontrol \
                    keepassx \
                    keepassxc \
-                   easytag
+                   easytag \
+                   asunder
 
 # LIBREOFFICE
 f "Install Libreoffice?" &&
@@ -280,7 +282,11 @@ f "Install DVD Support?" && {
 
 # MEDIA CODECS
 f "Install Media Codecs?" &&
-apt-get install -y libavcodec-extra \
+apt-get install -y lame \
+                   flac \
+                   libopus0 \
+                   wavpack \
+                   libavcodec-extra \
                    libxvidcore4 \
                    gstreamer1.0-plugins-base \
                    gstreamer1.0-plugins-good \
