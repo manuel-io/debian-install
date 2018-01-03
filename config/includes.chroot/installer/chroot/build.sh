@@ -34,6 +34,7 @@ apt-get install -y coreutils \
                    dialog \
                    dbus \
                    debconf \
+                   dpkg \
                    dnsutils \
                    kbd \
                    firmware*
@@ -104,6 +105,7 @@ f "User Settings?" && {
   groupadd -g "${uid}" "${user}"
   useradd -u "${uid}" -g "${uid}" -G "${user},${groups}" -d "/home/${user}" -s /usr/bin/zsh "${user}"
   chown -R $user:$user "/home/${user}"
+  passwd $user
 }
 
 # UPDATE
@@ -115,11 +117,17 @@ f "Upgrade Sources?" && {
 }
 
 # SYSTEM TOOLS
-f "Install System Tools?" &&
-apt-get install -y apt \
-                   apt-file \
-                   keyboard-configuration \
-                   cpufrequtils
+f "Install System Tools?" && {
+  apt-get install -y apt \
+                     apt-file \
+                     keyboard-configuration \
+                     lsof \
+                     vim \
+                     cpufrequtils \
+                     heatmon
+} && {
+  update-alternatives --set editor /usr/bin/vim.basic
+}
 
 # NETWORK TOOLS
 f "Install Network Tools?" && {
@@ -182,13 +190,16 @@ apt-get install -y xmonad \
                    slim \
                    xsel \
                    scrot \
-                   xserver-xorg-video-intel
+                   xserver-xorg-video-intel \
+                   libnotify-bin
 
 # XFCE DESKTOP
 f "Install XFCE?" &&
 apt-get install -y xfce4 \
+                   xfce4-cpufreq-plugin \
                    slim \
-                   xserver-xorg-video-intel
+                   xserver-xorg-video-intel \
+                   libnotify-bin
 # GUI APPS
 f "Install GUI APPS?" &&
 apt-get install -y liferea \
@@ -475,6 +486,14 @@ apt-get install -y build-essential \
                    quilt \
                    fakeroot \
                    lintian
+
+# DEBIAN EXTRA
+f "Install Debian Extra?" &&
+apt-get install -y wimtools \
+                   syslinux \
+                   extlinux \
+                   testdisk \
+                   innoextract
 
 # EXTRA PACKAGES
 f "Install Extra Packages?" && {
