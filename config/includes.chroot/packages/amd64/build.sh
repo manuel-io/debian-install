@@ -7,16 +7,16 @@ cd $(cd "$(dirname "$0")"; pwd)
 [ $1 -eq 0 ] &&
 for file in `find pool -name '*.deb' -type f`
 do
-  grep $file file.tmp &> /dev/null || rm -vf $file
+  grep $file packages.lst &> /dev/null || rm -vf $file
 done
 
 [ $1 -eq 1 ] &&
-rm -f file.tmp &&
+rm -f packages.lst &&
 for deb in `dpkg -l | cut -d\  -sf3`
 do
   for file in `apt-cache show $deb | grep Filename | cut -d\  -sf2`
   do
-    echo $file >> file.tmp
+    echo $file >> packages.lst
     dpkg-deb --info "${file}" &> /dev/null || {
       echo $deb
       echo $file
