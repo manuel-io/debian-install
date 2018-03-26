@@ -26,6 +26,10 @@ f "Install Ruby?" &&
   apt-get install -y ruby \
                      ruby-dev
 
+# LUA
+f "Install Lua?" &&
+  apt-get install -y luarocks
+
 # ELIXIR
 f "Install Elixir?" &&
   apt-get install -y elixir

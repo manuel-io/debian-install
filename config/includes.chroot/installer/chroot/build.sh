@@ -121,9 +121,9 @@ f "Upgrade Sources?" && {
   apt-get dist-upgrade
 }
 
-if [ -d "${PWD}/packages.d" ]
+if [ -d "${PWD}/build.d" ]
 then
-  for i in "${PWD}/packages.d"/*.sh
+  for i in "${PWD}/build.d"/*.sh
   do
     f "$(cat $i | head -2 | tail -1 | cut -d# -f 2)" &&
       . $i

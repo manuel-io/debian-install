@@ -33,6 +33,7 @@ f "Install Libreoffice?" &&
 f "Install Graphical?" &&
   apt-get install -y gimp \
                      inkscape \
+                     scribus \
                      imagemagick \
                      gnuplot \
                      geda \
