@@ -7,7 +7,8 @@ f "Install Data Recovery?" &&
 
 # DEBIAN EXTRA
 f "Install Forensic Tools?" &&
-  apt-get install -y unhide \
+  apt-get install -y cpuid \
+                     unhide \
                      rkhunter \
                      chkrootkit \
                      testdisk

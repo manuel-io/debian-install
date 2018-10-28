@@ -30,6 +30,10 @@ f "Install Ruby?" &&
 f "Install Lua?" &&
   apt-get install -y luarocks
 
+# ERLANG
+f "Install Lua?" &&
+  apt-get install erlang-dev
+
 # ELIXIR
 f "Install Elixir?" &&
   apt-get install -y elixir

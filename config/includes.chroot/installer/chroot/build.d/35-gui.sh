@@ -3,7 +3,9 @@
 
 # APPLICATIONS
 f "Install Applications?" &&
-  apt-get install -y liferea \
+  apt-get install -y thunar \
+                     thunar-vcs-plugin \
+                     liferea \
                      evince \
                      seahorse \
                      thunderbird \
